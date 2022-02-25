@@ -164,6 +164,31 @@ class Ui_MainWindow(object):
         self.reset_game.setText("")
         self.reset_game.setObjectName("reset_game")
         self.reset_game.move(340, 538)
+        self.second_1.setFont(QFont('Times', 20))
+        self.second_2.setFont(QFont('Times', 20))
+        self.second_3.setFont(QFont('Times', 20))
+        self.second_4.setFont(QFont('Times', 20))
+        self.second_5.setFont(QFont('Times', 20))
+        self.third_1.setFont(QFont('Times', 20))
+        self.third_2.setFont(QFont('Times', 20))
+        self.third_3.setFont(QFont('Times', 20))
+        self.third_4.setFont(QFont('Times', 20))
+        self.third_5.setFont(QFont('Times', 20))
+        self.fourth_1.setFont(QFont('Times', 20))
+        self.fourth_2.setFont(QFont('Times', 20))
+        self.fourth_3.setFont(QFont('Times', 20))
+        self.fourth_4.setFont(QFont('Times', 20))
+        self.fourth_5.setFont(QFont('Times', 20))
+        self.fifth_1.setFont(QFont('Times', 20))
+        self.fifth_2.setFont(QFont('Times', 20))
+        self.fifth_3.setFont(QFont('Times', 20))
+        self.fifth_4.setFont(QFont('Times', 20))
+        self.fifth_5.setFont(QFont('Times', 20))
+        self.sixth_1.setFont(QFont('Times', 20))
+        self.sixth_2.setFont(QFont('Times', 20))
+        self.sixth_3.setFont(QFont('Times', 20))
+        self.sixth_4.setFont(QFont('Times', 20))
+        self.sixth_5.setFont(QFont('Times', 20))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -178,15 +203,21 @@ class Ui_MainWindow(object):
         self.words = f.read().split()
         # create list to track amount of button clicks
         self.count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  
+        # keep track of used letters
+        self.used_letters = []
+        self.green_letter = []
+        self.position = []
+        self.yellow_letter = []
+        self.place = []
+        self.min_word = ''
         
         # when a word is submitted perform the calculation
-        self.start.clicked.connect(lambda: self.calculate_word(0))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(1))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(2))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(3))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(4))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(5))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(6))
+        self.start.clicked.connect(lambda: self.calculate_word(self.first_1, self.first_2, self.first_3, self.first_4, self.first_5, 999))
+        self.submit_1.clicked.connect(lambda: self.calculate_word(self.second_1, self.second_2, self.second_3, self.second_4, self.second_5, 0))
+        self.submit_2.clicked.connect(lambda: self.calculate_word(self.third_1, self.third_2, self.third_3, self.third_4, self.third_5, 5))
+        self.submit_3.clicked.connect(lambda: self.calculate_word(self.fourth_1, self.fourth_2, self.fourth_3, self.fourth_4, self.fourth_5, 10))
+        self.submit_4.clicked.connect(lambda: self.calculate_word(self.fifth_1, self.fifth_2, self.fifth_3, self.fifth_4, self.fifth_5, 15))
+        self.submit_5.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
         
         # chance the colour of buttons as they are selected to idicate whether they are in the word or correct position
         self.first_1.clicked.connect(lambda: self.button_colour(self.first_1, 0))
@@ -239,13 +270,32 @@ class Ui_MainWindow(object):
         else:
             button.setStyleSheet("QPushButton""{""background-color : #44a670;""}")
     
-    def calculate_word(self, progress):
-        # declare variables
-        min_word = ''
+    def calculate_word(self, box_1, box_2, box_3, box_4, box_5, first_number):
+        # declare variables        
         min_score = 99
+        self.green_letter = []
+        self.position = []
+        self.yellow_letter = []
+        self.place = []
 
+        # iterate over the previous word to factor in user input
+        for i in range(len(self.min_word)):
+            # store letters that are in the incorrect position to ensure they are used but not in the same place
+            if (self.count[i + first_number] - 2) % 3 == 0:
+                self.yellow_letter.append(self.min_word[i].lower())
+                self.place.append(i)
+            # store letters that are in the correct position to ensure they are used in the same place
+            elif (self.count[i + first_number] - 1) % 3 == 0:
+                self.green_letter.append(self.min_word[i].lower())
+                self.position.append(i)
+            # add letters that are not in the word to the used letters list
+            elif self.count[i + first_number] % 3 == 0:
+                self.used_letters.append(self.min_word[i].lower())
+       
         # calculate the word score
         for word in self.words:
+            standing = ''
+            allow = ''
             score = 0
             for letter in word:
                 if letter == 'a':
@@ -303,17 +353,58 @@ class Ui_MainWindow(object):
                 else:
                     print('Error! Word contains non standard character')
 
-            # if the new word has a lower score replace it
-            if score <= min_score:
+            # check that the word has green letters in the correct positions, if they aren't then do not use the word
+            if len(self.green_letter) != 0:
+                for i in range(len(self.green_letter)):
+                    if self.green_letter[i] != word[self.position[i]]:
+                        standing = 'illegal'
+                    
+                    #for j in range(len(self.used_letters)):
+                    #    if self.green_letter[i] == self.used_letters[j]:
+                    #        allow = 'yes'
+
+            # if the letter is in the green/yellow list and the used list then allow it to be used again
+            
+            # check that the word has yellow letters in positions not already tried, if they are then do not use the word
+            if len(self.yellow_letter) != 0:                
+                
+                for i in range(len(self.yellow_letter)):               
+                    if self.yellow_letter[i] == word[self.place[i]]:
+                        standing = 'illegal'                        
+                    elif set(self.yellow_letter[i]).intersection(word) == set():
+                        standing = 'illegal'
+                        
+                    #for j in range(len(self.used_letters)):
+                    #    if self.yellow_letter[i] == self.used_letters[j]:
+                    #        allow = 'yes'
+            
+            if set(self.green_letter).intersection(self.yellow_letter) != set():
+                temp = word
+                for i in range(len(temp)):
+                    for j in range(len(self.green_letter)):
+                        if temp[i] == self.green_letter[j]:
+                            temp[i] = '2'
+                    for k in range(len(self.yellow_letter)):
+                        if temp[i] == self.yellow_letter[k]:
+                            temp = 'good'
+                if temp != 'good':
+                    standing = 'illegal'
+
+            
+            # if the new word has a lower score and no used letters replace it
+            if score <= min_score and set(word).intersection(self.used_letters) == set() and standing != 'illegal':
                 min_score = score
-                min_word = word.upper()
-        
-        if progress == 0:
-            self.first_1.setText(min_word[0])
-            self.first_2.setText(min_word[1])
-            self.first_3.setText(min_word[2])
-            self.first_4.setText(min_word[3])
-            self.first_5.setText(min_word[4])
+                self.min_word = word.upper()
+
+        # insert the letters into the boxes       
+        try:
+            box_1.setText(self.min_word[0])
+            box_2.setText(self.min_word[1])
+            box_3.setText(self.min_word[2])
+            box_4.setText(self.min_word[3])
+            box_5.setText(self.min_word[4])
+        except:
+            print('No word in dictionary matches criteria')
 
     def reset(self):
         self.count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
