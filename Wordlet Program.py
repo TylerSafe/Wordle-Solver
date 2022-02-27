@@ -284,19 +284,23 @@ class Ui_MainWindow(object):
             if (self.count[i + first_number] - 2) % 3 == 0:
                 self.yellow_letter.append(self.min_word[i].lower())
                 self.place.append(i)
+                print('yellow:', self.yellow_letter)
             # store letters that are in the correct position to ensure they are used in the same place
             elif (self.count[i + first_number] - 1) % 3 == 0:
                 self.green_letter.append(self.min_word[i].lower())
                 self.position.append(i)
+                print('green:',self.green_letter)
             # add letters that are not in the word to the used letters list
             elif self.count[i + first_number] % 3 == 0:
                 self.used_letters.append(self.min_word[i].lower())
+                print('used:',self.used_letters)
        
         # calculate the word score
         for word in self.words:
             standing = ''
-            allow = ''
             score = 0
+            new_word = ''
+            allow = ''
             for letter in word:
                 if letter == 'a':
                     score += 1
@@ -355,30 +359,83 @@ class Ui_MainWindow(object):
 
             # check that the word has green letters in the correct positions, if they aren't then do not use the word
             if len(self.green_letter) != 0:
-                for i in range(len(self.green_letter)):
-                    if self.green_letter[i] != word[self.position[i]]:
-                        standing = 'illegal'
-                    
-                    #for j in range(len(self.used_letters)):
-                    #    if self.green_letter[i] == self.used_letters[j]:
-                    #        allow = 'yes'
-
-            # if the letter is in the green/yellow list and the used list then allow it to be used again
-            
+                for i in range(len(word)):
+                    for j in range(len(self.green_letter)):
+                        if self.green_letter[j] != word[self.position[j]]:
+                            if word == 'mogul':
+                                print('illegal due to green letter not being in the correct spot (green)', word)
+                            standing = 'illegal'
+                        
+                        #for j in range(len(self.used_letters)):
+                        #    if self.green_letter[i] == self.used_letters[j]:
+                        #        new_word = word[:self.position[i]] + word[(self.position[i] + 1):]
+                        #        print('green')
+                        #        print(self.position[i])
+                        #        print(word[:self.position[i]])
+                        #        print(word[(self.position[i] + 1):])
+                        #        print(word)
+                        #        print(new_word)
+                        if word == 'mogul':
+                            print('letter is in used letters (if set):', set(word[i]).intersection(self.used_letters), '   letter is also in green letters (if set):', set(word[i]).intersection(self.green_letter))
+                        
+                        if set(word[i]).intersection(self.used_letters) != set() and set(word[i]).intersection(self.green_letter) != set():
+                            new_word = word.replace(word[i], '', 1)
+                            if word == 'mogul':    
+                                print('letter is in both green and used letters, remove the green letter', word, new_word)
+                                                
+                            if set(new_word).intersection(self.used_letters) != set():
+                                if word == 'mogul':    
+                                    print('word still has used letters after removing the green letter', word)
+                                standing = 'illegal'
+                            else:
+                                if word == 'mogul':    
+                                    print('word is allowed due to being in green list and not having extra used letters', word)
+                                allow = 'yes'
+                                
+           
             # check that the word has yellow letters in positions not already tried, if they are then do not use the word
             if len(self.yellow_letter) != 0:                
                 
                 for i in range(len(self.yellow_letter)):               
                     if self.yellow_letter[i] == word[self.place[i]]:
+                        if word == 'mogul':
+                            print('illegal due to having tried this spot before (yellow)', word)
                         standing = 'illegal'                        
                     elif set(self.yellow_letter[i]).intersection(word) == set():
+                        if word == 'mogul':
+                            print('word doesnt have yellow letter in it', word)
                         standing = 'illegal'
                         
                     #for j in range(len(self.used_letters)):
                     #    if self.yellow_letter[i] == self.used_letters[j]:
-                    #        allow = 'yes'
+                    #        new_word = word[:self.position[i]] + word[(self.position[i] + 1):]
+                    #        print('yellow')
+                    #        print(self.position[i])
+                    #        print(word[:self.position[i]])
+                    #        print(word[(self.position[i] + 1):])
+                    #        print(word)
+                    #        print(new_word)
+                        
+                    #    if set(new_word).intersection(self.used_letters) != set():
+                    #        standing = 'illegal'
+                    if set(word[i]).intersection(self.used_letters) != set() and set(word[i]).intersection(self.yellow_letter) != set():
+                        new_word = word.replace(word[i], '', 1)
+                        if word == 'mogul':
+                            print('letter is in both yellow and used letters, remove the yellow letter', word, new_word)
+                                               
+                        if set(new_word).intersection(self.used_letters) != set():
+                            if word == 'mogul':
+                                print('word still has used letters after removing the yellow word', word)
+                            standing = 'illegal'
+                        else:
+                            allow = 'yes'
+                            if word == 'mogul':    
+                                print('word is allowed due to being in yellow list and not having extra used letters', word)
+                            
+                            
             
-            if set(self.green_letter).intersection(self.yellow_letter) != set():
+            # if a letter is in both green and yellow lists ensure it is used twice
+            '''if set(self.green_letter).intersection(self.yellow_letter) != set():
                 temp = word
                 for i in range(len(temp)):
                     for j in range(len(self.green_letter)):
@@ -388,11 +445,14 @@ class Ui_MainWindow(object):
                         if temp[i] == self.yellow_letter[k]:
                             temp = 'good'
                 if temp != 'good':
-                    standing = 'illegal'
+                    standing = 'illegal'''
 
-            
+            #print('the word, its score and min_score before comparison', word, score, min_score, allow)
+            if word == 'mogul':
+                print('score:', score, '   min score:', min_score, '   allow:', allow, '   used letters or not (empty if no used):', set(word).intersection(self.used_letters), '   standing:', standing)
             # if the new word has a lower score and no used letters replace it
-            if score <= min_score and set(word).intersection(self.used_letters) == set() and standing != 'illegal':
+            if score <= min_score and (set(word).intersection(self.used_letters) == set() or allow == 'yes') and standing != 'illegal':
+                #print('this word is set to the new min_word (passed all tests)', word)
                 min_score = score
                 self.min_word = word.upper()
 
@@ -417,7 +477,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Wordlet Solver</span></p></body></html>"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Wordle Solver</span></p></body></html>"))
         self.submit_1.setText(_translate("MainWindow", "Submit"))
         self.start.setText(_translate("MainWindow", "Start"))
         self.submit_2.setText(_translate("MainWindow", "Submit"))
