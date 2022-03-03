@@ -281,10 +281,6 @@ class Ui_MainWindow(object):
     def calculate_word(self, box_1, box_2, box_3, box_4, box_5, first_number):
         # declare variables        
         min_score = 99
-        self.green_letter = []
-        self.position = []
-        self.yellow_letter = []
-        self.place = []
         party = 0
 
         # iterate over the previous word to factor in user input
@@ -293,11 +289,13 @@ class Ui_MainWindow(object):
             if (self.count[i + first_number] - 2) % 3 == 0:
                 self.yellow_letter.append(self.min_word[i].lower())
                 self.place.append(i)
+                print(self.yellow_letter, 'yellow', self.place)
             # store letters that are in the correct position to ensure they are used in the same place
             elif (self.count[i + first_number] - 1) % 3 == 0:
                 self.green_letter.append(self.min_word[i].lower())
                 self.position.append(i)
                 party += 1
+                print(self.green_letter, 'green', self.position)
                 # if all letters are green play party gif!
                 if party == 5:
                     self.label_13.setHidden(False)
@@ -305,6 +303,7 @@ class Ui_MainWindow(object):
             # add letters that are not in the word to the used letters list
             elif self.count[i + first_number] % 3 == 0:
                 self.used_letters.append(self.min_word[i].lower())
+                print(self.used_letters, 'used')
        
         # calculate the word score
         for word in self.words:
@@ -433,7 +432,7 @@ class Ui_MainWindow(object):
                 min_score = score
                 self.min_word = word.upper()
 
-        # insert the letters into the boxes       
+        # insert the letters of the chosen word into the relevant boxes      
         try:
             box_1.setText(self.min_word[0])
             box_2.setText(self.min_word[1])
@@ -442,9 +441,75 @@ class Ui_MainWindow(object):
             box_5.setText(self.min_word[4])
         except:
             print('No word in dictionary matches criteria')
-
+    
     def reset(self):
-        print('soon')
+        self.count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  
+        self.used_letters = []
+        self.green_letter = []
+        self.position = []
+        self.yellow_letter = []
+        self.place = []
+        self.min_word = ''
+        self.first_1.setText('')
+        self.first_2.setText('')
+        self.first_3.setText('')
+        self.first_4.setText('')
+        self.first_5.setText('')
+        self.second_1.setText('')
+        self.second_2.setText('')
+        self.second_3.setText('')
+        self.second_4.setText('')
+        self.second_5.setText('')
+        self.third_1.setText('')
+        self.third_2.setText('')
+        self.third_3.setText('')
+        self.third_4.setText('')
+        self.third_5.setText('')
+        self.fourth_1.setText('')
+        self.fourth_2.setText('')
+        self.fourth_3.setText('')
+        self.fourth_4.setText('')
+        self.fourth_5.setText('')
+        self.fifth_1.setText('')
+        self.fifth_2.setText('')
+        self.fifth_3.setText('')
+        self.fifth_4.setText('')
+        self.fifth_5.setText('')
+        self.sixth_1.setText('')
+        self.sixth_2.setText('')
+        self.sixth_3.setText('')
+        self.sixth_4.setText('')
+        self.sixth_5.setText('')
+        self.first_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.first_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.first_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.first_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.first_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.second_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.second_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.second_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.second_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.second_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.third_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.third_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.third_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.third_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.third_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fourth_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fourth_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fourth_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fourth_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fourth_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fifth_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fifth_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fifth_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fifth_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.fifth_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.sixth_1.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.sixth_2.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.sixth_3.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.sixth_4.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.sixth_5.setStyleSheet("QPushButton""{""background-color : None;""}")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
