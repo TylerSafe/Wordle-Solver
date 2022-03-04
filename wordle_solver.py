@@ -4,6 +4,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QMovie
 
+# letter on green list and used list , not illegal and has a yes tick
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -226,6 +228,7 @@ class Ui_MainWindow(object):
         self.submit_3.clicked.connect(lambda: self.calculate_word(self.fourth_1, self.fourth_2, self.fourth_3, self.fourth_4, self.fourth_5, 10))
         self.submit_4.clicked.connect(lambda: self.calculate_word(self.fifth_1, self.fifth_2, self.fifth_3, self.fifth_4, self.fifth_5, 15))
         self.submit_5.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
+        self.submit_6.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
         
         # chance the colour of buttons as they are selected to idicate whether they are in the word or correct position
         self.first_1.clicked.connect(lambda: self.button_colour(self.first_1, 0))
@@ -282,35 +285,47 @@ class Ui_MainWindow(object):
         # declare variables        
         min_score = 99
         party = 0
-
+        same_letter = [0, 0, 0, 0, 0]
+        
         # iterate over the previous word to factor in user input
         for i in range(len(self.min_word)):
-            # store letters that are in the incorrect position to ensure they are used but not in the same place
-            if (self.count[i + first_number] - 2) % 3 == 0:
-                self.yellow_letter.append(self.min_word[i].lower())
-                self.place.append(i)
-                print(self.yellow_letter, 'yellow', self.place)
+            # allow multiple of the same letters to be stored in green letters 
+            for j in range(len(self.min_word)):
+                if (self.count[i + first_number] - 1) % 3 == 0 and self.min_word[i] == self.min_word[j] and i != j and (self.count[j + first_number] - 1) % 3 == 0:
+                    same_letter[j] = 1
+
             # store letters that are in the correct position to ensure they are used in the same place
-            elif (self.count[i + first_number] - 1) % 3 == 0:
+            if (self.count[i + first_number] - 1) % 3 == 0 and set(self.min_word[i].lower()).intersection(self.green_letter) == set() or same_letter[i] == 1:
                 self.green_letter.append(self.min_word[i].lower())
                 self.position.append(i)
-                party += 1
-                print(self.green_letter, 'green', self.position)
-                # if all letters are green play party gif!
-                if party == 5:
-                    self.label_13.setHidden(False)
-                    self.movie.start()
+                # if a letter moves from the yellow list to the green list remove it from the yellow list
+                if set(self.min_word[i].lower()).intersection(self.yellow_letter) != set():
+                    index = self.yellow_letter.index(self.min_word[i].lower())
+                    del self.yellow_letter[index]
+                    del self.place[index]
+            # store letters that are in the incorrect position to ensure they are used but not in the same place
+            elif (self.count[i + first_number] - 2) % 3 == 0:
+                self.yellow_letter.append(self.min_word[i].lower())
+                self.place.append(i)
             # add letters that are not in the word to the used letters list
             elif self.count[i + first_number] % 3 == 0:
                 self.used_letters.append(self.min_word[i].lower())
-                print(self.used_letters, 'used')
-       
-        # calculate the word score
+            
+            # keep track of the amount of green tiles, if they are all green play the celebration big
+            if (self.count[i + first_number] - 1) % 3 == 0:
+                party += 1
+                if party == 5:
+                    self.label_13.setHidden(False)
+                    self.movie.start()
+        print(self.green_letter, 'green')
+        print(self.yellow_letter, 'yellow')
+        # iterate over the words to assess their suitability
         for word in self.words:
             standing = ''
             score = 0
             new_word = ''
             allow = ''
+            # iterate over each character in order to determine a score for the word
             for letter in word:
                 if letter == 'a':
                     score += 1
@@ -367,6 +382,10 @@ class Ui_MainWindow(object):
                 else:
                     print('Error! Word contains non standard character')
 
+            # for the first guess after the start do not guess a word with 2 of the same letter to ensure coverage of more letters (improves chances of winning)
+            if first_number == 0:
+                if self.double_letter(word) == True:
+                    standing = 'illegal'
             
             if len(self.green_letter) != 0:
                 # check that the word has green letters in the correct positions, if they aren't then do not use the word
@@ -427,6 +446,10 @@ class Ui_MainWindow(object):
                 if temp != 'good':
                     standing = 'illegal'''
 
+            #if word == 'peach':
+            #    print(allow, standing)
+            #if word == 'peace':
+            #    print(allow, standing)
             # if the new word has a lower score and no used letters outside the green/yellow list set it as the new word
             if score <= min_score and (set(word).intersection(self.used_letters) == set() or allow == 'yes') and standing != 'illegal':
                 min_score = score
@@ -441,7 +464,15 @@ class Ui_MainWindow(object):
             box_5.setText(self.min_word[4])
         except:
             print('No word in dictionary matches criteria')
+
+    # check if a word has 2 of the same letter in it
+    def double_letter(self, word):
+        for i in range(len(word)):
+            for j in range(len(word)):
+                if i != j and word[i] == word[j]:
+                    return True
     
+    # reset everything so 
     def reset(self):
         self.count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  
         self.used_letters = []
@@ -510,6 +541,7 @@ class Ui_MainWindow(object):
         self.sixth_3.setStyleSheet("QPushButton""{""background-color : None;""}")
         self.sixth_4.setStyleSheet("QPushButton""{""background-color : None;""}")
         self.sixth_5.setStyleSheet("QPushButton""{""background-color : None;""}")
+        self.label_13.setHidden(True)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
