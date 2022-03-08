@@ -13,8 +13,7 @@ Installation:
 - Download the zip file titled 'wordle_solver_complete'
 - Extract to your preferred location
 - Ensure you have Python 3.0 or later installed
-- You will need to install the PyQT5 library to run the program, pip installs provided below
-      pip install PyQt5
+- You will need to install the PyQT5 library to run the program, the pip install is here ---> pip install PyQt5
 - Run the code in the .py file titled 'wordle_solver', can be from an IDE
 
 How to Use:
