@@ -24,4 +24,5 @@ Enter the word into your game on your device to find out which letters are not u
 mirror this on the solver by clicking a box once to turn it green, twice to turn it yellow or a third time to turn it back to no colour. Once the
 solver reflects the game press the submit button and a new word will be suggested. Repeat until the word is solved. Upon the solver being correct
 change all squares green and press submit to make the solver happy and want to celebrate. Pressing the 'Reset' button wipes the current game, 
-allowing for a new one to be started. 
+allowing for a new one to be started. If the solver suggests a word that is not allowed by the game, go into the words.txt file and delete that 
+word from the list.
