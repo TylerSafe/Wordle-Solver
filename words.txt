@@ -2905,6 +2905,7 @@ wafer
 ceded
 novas
 feign
+ulcer
 spews
 larch
 huffs
@@ -3435,7 +3436,6 @@ verve
 ethic
 gamut
 lingo
-dunno
 align
 sissy
 incur
@@ -3836,7 +3836,6 @@ hulas
 croft
 achoo
 genii
-nodal
 outgo
 spiel
 viols
@@ -3846,7 +3845,6 @@ fudgy
 epoxy
 leggy
 hanky
-lapis
 felon
 beefy
 coots
@@ -4587,7 +4585,6 @@ admen
 offen
 cills
 offal
-lotta
 bolas
 thwap
 alway
@@ -4730,7 +4727,6 @@ largo
 bazar
 pssst
 sylph
-lulab
 toque
 fugit
 plunk
@@ -4785,7 +4781,6 @@ quiff
 epsom
 neath
 ocher
-tared
 homme
 mezzo
 corms
@@ -4828,7 +4823,6 @@ pawky
 limen
 vivre
 chert
-unsee
 tiros
 brack
 foots
@@ -4972,7 +4966,6 @@ trier
 gunks
 steno
 stoma
-airer
 ovate
 torah
 apian
@@ -5199,7 +5192,6 @@ nerfs
 fauns
 calla
 pseud
-lurer
 magus
 obeah
 atria
@@ -5282,7 +5274,6 @@ fermi
 loges
 niter
 revet
-unate
 gyved
 totty
 zappy
@@ -5402,7 +5393,6 @@ attar
 teaks
 aioli
 awing
-anent
 feces
 redip
 wists
@@ -5429,7 +5419,6 @@ zonks
 ilium
 aport
 ikons
-mulct
 reeve
 civvy
 canna
@@ -5506,7 +5495,6 @@ roods
 morel
 sware
 elans
-latus
 gules
 razer
 doxie
@@ -5557,7 +5545,6 @@ carpy
 apish
 oaten
 gappy
-aurae
 bract
 rooky
 axled
@@ -5568,7 +5555,6 @@ turfy
 impro
 mashy
 miens
-nonny
 olios
 grook
 sates
@@ -5674,7 +5660,6 @@ oxlip
 unban
 mussy
 finny
-rimer
 login
 molas
 cirri
@@ -5712,7 +5697,6 @@ moots
 yerba
 rhumb
 unarc
-direr
 munge
 eland
 nares
