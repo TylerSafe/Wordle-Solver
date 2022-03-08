@@ -1,12 +1,15 @@
+# Wordle solver created by Tyler Safe in Feb/March 2022
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QMovie
+import os
 
-# letter on green list and used list , not illegal and has a yes tick
-
+# class that creates the UI and performs the functionality of the solver
 class Ui_MainWindow(object):
+    # auto generated code from pyqt5 to create the UI
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -166,6 +169,7 @@ class Ui_MainWindow(object):
         self.reset_game.setText("")
         self.reset_game.setObjectName("reset_game")
         self.reset_game.move(340, 538)
+        # resize text within the buttons
         self.second_1.setFont(QFont('Times', 20))
         self.second_2.setFont(QFont('Times', 20))
         self.second_3.setFont(QFont('Times', 20))
@@ -191,11 +195,13 @@ class Ui_MainWindow(object):
         self.sixth_3.setFont(QFont('Times', 20))
         self.sixth_4.setFont(QFont('Times', 20))
         self.sixth_5.setFont(QFont('Times', 20))
+        # setup party gif (for some reason doesn't work when launched from executable)
+        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         self.label_13 = QtWidgets.QLabel(self.centralwidget)
         self.label_13.setGeometry(QtCore.QRect(170, 115, 600, 410))
         self.label_13.setText("")
         self.label_13.setObjectName("label_13")
-        self.movie = QMovie("C:\\Users\\Legen\\Documents\\Wordlet Program\\party_gif.gif")
+        self.movie = QMovie(os.path.join(__location__, "party_gif.gif"))
         self.label_13.setMovie(self.movie)
         self.label_13.setHidden(True)
         
@@ -221,14 +227,17 @@ class Ui_MainWindow(object):
         self.place = []
         self.min_word = ''
         
-        # when a word is submitted perform the calculation
-        self.start.clicked.connect(lambda: self.calculate_word(self.first_1, self.first_2, self.first_3, self.first_4, self.first_5, 999))
-        self.submit_1.clicked.connect(lambda: self.calculate_word(self.second_1, self.second_2, self.second_3, self.second_4, self.second_5, 0))
-        self.submit_2.clicked.connect(lambda: self.calculate_word(self.third_1, self.third_2, self.third_3, self.third_4, self.third_5, 5))
-        self.submit_3.clicked.connect(lambda: self.calculate_word(self.fourth_1, self.fourth_2, self.fourth_3, self.fourth_4, self.fourth_5, 10))
-        self.submit_4.clicked.connect(lambda: self.calculate_word(self.fifth_1, self.fifth_2, self.fifth_3, self.fifth_4, self.fifth_5, 15))
-        self.submit_5.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
-        self.submit_6.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
+        try:
+            # when a word is submitted perform the calculation
+            self.start.clicked.connect(lambda: self.calculate_word(self.first_1, self.first_2, self.first_3, self.first_4, self.first_5, 999))
+            self.submit_1.clicked.connect(lambda: self.calculate_word(self.second_1, self.second_2, self.second_3, self.second_4, self.second_5, 0))
+            self.submit_2.clicked.connect(lambda: self.calculate_word(self.third_1, self.third_2, self.third_3, self.third_4, self.third_5, 5))
+            self.submit_3.clicked.connect(lambda: self.calculate_word(self.fourth_1, self.fourth_2, self.fourth_3, self.fourth_4, self.fourth_5, 10))
+            self.submit_4.clicked.connect(lambda: self.calculate_word(self.fifth_1, self.fifth_2, self.fifth_3, self.fifth_4, self.fifth_5, 15))
+            self.submit_5.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
+            self.submit_6.clicked.connect(lambda: self.calculate_word(self.sixth_1, self.sixth_2, self.sixth_3, self.sixth_4, self.sixth_5, 20))
+        except:
+            print('Incorrect button, please use them in order or press the Reset button to start again')
         
         # chance the colour of buttons as they are selected to idicate whether they are in the word or correct position
         self.first_1.clicked.connect(lambda: self.button_colour(self.first_1, 0))
@@ -317,8 +326,7 @@ class Ui_MainWindow(object):
                 if party == 5:
                     self.label_13.setHidden(False)
                     self.movie.start()
-        print(self.green_letter, 'green')
-        print(self.yellow_letter, 'yellow')
+
         # iterate over the words to assess their suitability
         for word in self.words:
             standing = ''
@@ -430,26 +438,7 @@ class Ui_MainWindow(object):
                         standing = 'illegal'
                     else:
                         allow = 'yes'
-                            
-                            
-            
-            # if a letter is in both green and yellow lists ensure it is used twice
-            '''if set(self.green_letter).intersection(self.yellow_letter) != set():
-                temp = word
-                for i in range(len(temp)):
-                    for j in range(len(self.green_letter)):
-                        if temp[i] == self.green_letter[j]:
-                            temp[i] = '2'
-                    for k in range(len(self.yellow_letter)):
-                        if temp[i] == self.yellow_letter[k]:
-                            temp = 'good'
-                if temp != 'good':
-                    standing = 'illegal'''
 
-            #if word == 'peach':
-            #    print(allow, standing)
-            #if word == 'peace':
-            #    print(allow, standing)
             # if the new word has a lower score and no used letters outside the green/yellow list set it as the new word
             if score <= min_score and (set(word).intersection(self.used_letters) == set() or allow == 'yes') and standing != 'illegal':
                 min_score = score
@@ -472,7 +461,7 @@ class Ui_MainWindow(object):
                 if i != j and word[i] == word[j]:
                     return True
     
-    # reset everything so 
+    # reset everything for another game to start
     def reset(self):
         self.count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  
         self.used_letters = []
@@ -543,6 +532,7 @@ class Ui_MainWindow(object):
         self.sixth_5.setStyleSheet("QPushButton""{""background-color : None;""}")
         self.label_13.setHidden(True)
 
+    # auto generated code for the UI from pyqt5
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -556,7 +546,7 @@ class Ui_MainWindow(object):
         self.submit_6.setText(_translate("MainWindow", "Submit"))
         self.reset_game.setText(_translate("MainWindow", "Reset"))
 
-
+# run program
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
