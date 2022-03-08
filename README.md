@@ -2,6 +2,7 @@
 Created by Tyler Safe in 2022
 
 Description:
+
 A solver written in Python code that suggests a 5 letter word based on scrabble score to be entered, using the rules of the Wordle game. This works
 on the assumption that the lower scrabble score a letter gives the more common it is and the higher chance of it being in any given word. The program
 was created for fun after I had played the Wordle game and was interested in how well a solver would perform as well as how difficult it would be to
@@ -17,6 +18,7 @@ Installation:
 - Run the code in the .py file titled 'wordle_solver', can be from an IDE
 
 How to Use:
+
 The program is very easy to use. Upon launching click the 'Start' button to begin a game, a word will be suggested to enter into your wordle game. 
 Enter the word into your game on your device to find out which letters are not used, green (correct location) or yellow (incorrect location). Then
 mirror this on the solver by clicking a box once to turn it green, twice to turn it yellow or a third time to turn it back to no colour. Once the
